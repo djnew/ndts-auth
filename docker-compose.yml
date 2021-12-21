@@ -1,0 +1,31 @@
+version: '3.3'
+services:
+  ndts-auth-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ndts-auth-app
+    entrypoint: ['npm', 'run', 'start:dev']
+    env_file:
+      - .env
+    ports:
+      - 80:${PORT:-3000}
+    volumes:
+      - ".:/var/www"
+    links:
+      - ndts-auth-mongo
+    depends_on:
+      - ndts-auth-mongo
+  ndts-auth-mongo:
+    image: mongo:5.0.3
+    container_name: ndts-auth-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_CONNECT_USERNAME:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_CONNECT_PASSWORD:-password}
+    volumes:
+      - mongo_ndts_auth_data:/data/db
+volumes:
+  mongo_ndts_auth_data:
