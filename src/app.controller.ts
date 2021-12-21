@@ -17,7 +17,7 @@ export class AppController {
   }
 
   @UseGuards(AuthGuard('local'))
-  @Post('auth/login')
+  @Post('/api/users/signin')
   async login(@Req() req) {
     return req.user;
   }
